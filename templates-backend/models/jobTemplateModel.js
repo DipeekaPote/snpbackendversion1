@@ -17,12 +17,12 @@ const jobTemplateSchema = new mongoose.Schema({
     jobassignees: [{
         type: Array,
         type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+        ref: 'User',
     }],
 
     priority: {
         type: String,
-        },
+    },
     description: {
         type: String,
     },
@@ -68,13 +68,30 @@ const jobTemplateSchema = new mongoose.Schema({
         //     return this.absolutedates;
         // }
     },
-    comments:[{
+    comments: [{
         type: String
     }],
+
+    showinclientportal: {
+        type: Boolean
+    },
+
+    jobnameforclient: {
+        type: Boolean
+    },
+
+    clientfacingstatus: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ClientFacingjobStatus',
+    },
+
     active: {
         type: Boolean,
         default: true
     }
+
+
+
 }, { timestamps: true });
 
 const JobTemplate = mongoose.model('JobTemplate', jobTemplateSchema);

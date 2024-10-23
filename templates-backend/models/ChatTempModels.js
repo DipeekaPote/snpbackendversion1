@@ -12,9 +12,9 @@ const clienttasksSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    checked:{
+    checked: {
         type: Boolean,
-        default : false,
+        default: false,
     }
 }, { _id: false });
 const chatTemplateSchema = new mongoose.Schema({
@@ -46,12 +46,12 @@ const chatTemplateSchema = new mongoose.Schema({
     numberofreminders: {
         type: Number,
     },
-    isclienttaskchecked : {
+    isclienttaskchecked: {
         type: Boolean,
-        default : false,
+        default: false,
     },
     clienttasks: [clienttasksSchema],
-    
+
     active: {
         type: Boolean,
         default: true

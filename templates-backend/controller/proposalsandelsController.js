@@ -34,7 +34,19 @@ const getProposalesAndElsTemplate = async (req, res) => {
 
 //POST a new ServiceTemplate 
 const createProposalesAndElsTemplate = async (req, res) => {
-    const { templatename, teammember, proposalname, introduction, terms, servicesandinvoices, introductiontext, termsandconditions, servicesandinvoiceid, custommessageinemail, custommessageinemailtext, reminders, daysuntilnextreminder, numberofreminder, active } = req.body;
+    const { templatename, teammember, proposalname, introduction, terms, servicesandinvoices, introductiontextname, introductiontext, termsandconditionsname, termsandconditions, custommessageinemail, custommessageinemailtext, reminders, daysuntilnextreminder, numberofreminder,	
+        servicesandinvoicetempid,
+       invoicetemplatename,
+       invoiceteammember,
+       issueinvoice,
+       specificdate,
+       specifictime,
+       description,  
+       lineItems,
+       summary,
+       notetoclient,
+       Addinvoiceoraskfordeposit,Additemizedserviceswithoutcreatinginvoices, paymentterms, paymentduedate, paymentamount,
+    active } = req.body;
     try {
         const existingTemplate = await ProposalesAndElsTemplate.findOne({
             templatename
@@ -42,7 +54,16 @@ const createProposalesAndElsTemplate = async (req, res) => {
         if (existingTemplate) {
             return res.status(400).json({ message: "ProposalesAndEls Template already exists" });
         }
-        const newProposalesAndElsTemplate = await ProposalesAndElsTemplate.create({  templatename, teammember, proposalname, introduction, terms, servicesandinvoices, introductiontext, termsandconditions, servicesandinvoiceid, custommessageinemail, custommessageinemailtext, reminders, daysuntilnextreminder, numberofreminder, active });
+        const newProposalesAndElsTemplate = await ProposalesAndElsTemplate.create({  templatename, teammember, proposalname, introduction, terms, servicesandinvoices, introductiontextname, introductiontext, termsandconditionsname, termsandconditions, custommessageinemail, custommessageinemailtext, reminders, daysuntilnextreminder, numberofreminder,  servicesandinvoicetempid,
+            invoicetemplatename,
+            invoiceteammember,
+            issueinvoice,
+            specificdate,
+            specifictime,
+            description,  
+            lineItems,
+            summary,
+            notetoclient, Addinvoiceoraskfordeposit, Additemizedserviceswithoutcreatinginvoices, paymentterms, paymentduedate, paymentamount, active });
         return res.status(201).json({ message: "ProposalesAndEls Template created successfully", newProposalesAndElsTemplate });
 
     } catch (error) {
@@ -96,29 +117,45 @@ const updateProposalesAndElsTemplate = async (req, res) => {
     }
 };
 
-
-
-//Get a single JobTemplate List
 const getProposalesAndElsTemplateById = async (req, res) => {
     const { id } = req.params;
-    console.log(id)
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: "Invalid ProposalesAndEls Template ID" });
     }
+
     try {
         const proposalesAndElsTemplate = await ProposalesAndElsTemplate.findById(id)
-         .populate({ path: 'teammember', model: 'User' })
-         .populate({ path: 'servicesandinvoiceid', model: 'InvoiceTemplate' });
-                 
-        if (!proposalesAndElsTemplate) {
-            return res.status(404).json({ error: "No such ProposalesAndEls Template" });
+            .populate({
+                path: 'teammember',
+                model: 'User',
+                // select: 'name email',  // Check if the users have the correct fields
+            })
+            .populate({
+                path: 'servicesandinvoicetempid',
+                model: 'InvoiceTemplate',
+                // select: 'invoiceName totalAmount',  // Select necessary fields for debugging
+            })
+            .populate({
+                path: 'invoiceteammember',
+                model: 'User',
+                // select: 'name email',  // Check if the users have the correct fields
+            });
+
+             if (!proposalesAndElsTemplate) {
+            return res.status(404).json({ error: "No such ProposalesAndEls Template found" });
         }
 
-        res.status(200).json({ message: "ProposalesAndEls Template retrieved successfully", proposalesAndElsTemplate });
+        res.status(200).json({
+            message: "ProposalesAndEls Template retrieved successfully",
+            proposalesAndElsTemplate
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error retrieving template:', error);
+        res.status(500).json({ error: "An error occurred while retrieving the template" });
     }
 };
+
 
 
 module.exports = {

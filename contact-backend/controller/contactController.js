@@ -23,17 +23,6 @@ const getSingleContact = async (req, res) => {
         return res.status(404).json({ error: 'Invalid Contact ID' });
     }
 
-    // try {
-    //     const contact = await Contacts.findById(id);
-        
-    //     if (!contact) {
-    //         return res.status(404).json({ error: 'No such contact' });
-    //     }
-    //     res.status(200).json({ message: "Contacts retrieved successfully", contact });
-    // } catch (error) {
-    //     console.error(error);
-    //     res.status(500).json({ error: error.message });
-    // }
      try {
         const contact = await Contacts.findById(id)
        

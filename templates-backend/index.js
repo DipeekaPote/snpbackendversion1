@@ -13,6 +13,7 @@ const CategoryRoutes = require('./routes/CategoryRoutes')
 const invoiceTemplateRoutes = require('./routes/invoiceTemplateRoutes')
 const ChatTemplateRoutes = require('./routes/ChatTempRoutes');
 const ProposalsandelsRoutes = require('./routes/ProposalsandelsRoutes')
+const ClientfacingjobstatusRoutes = require('./routes/ClientfacingjobstatusRoutes')
 
 // Middleware
 app.use(cors());
@@ -44,13 +45,17 @@ app.use('/workflow/services', serviceRoutes)
 // routes for category
 app.use('/workflow/category', CategoryRoutes)
 
-// routes for category
+// routes for invoiceTemplate
 app.use('/workflow/invoicetemp', invoiceTemplateRoutes)
 
-
+// routes for ChatTemplate
 app.use('/Workflow/chats', ChatTemplateRoutes)
 
+// routes for ChatTemplate
 app.use('/Workflow/proposalesandels', ProposalsandelsRoutes);
+
+// routes for tags
+app.use('/workflow/clientfacingjobstatus', ClientfacingjobstatusRoutes);
 
 // database connect
 dbconnect()

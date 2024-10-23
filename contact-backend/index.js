@@ -4,6 +4,9 @@ const app = express();
 const cors = require('cors');
 const contactRoutes = require('./routers/contactRoutes');
 const AccountsRoutes = require('./routers/AccountsRoutes');
+const AssignTags = require('./middleware/assignbulktags')
+const mongoose = require('mongoose');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -12,6 +15,18 @@ app.use(express.json());
 app.use('/contacts', contactRoutes)
 
 app.use('/accounts', AccountsRoutes)
+
+app.use('/', AssignTags)
+
+//! assignbulktags Routes
+const assignbulktags = require("./middleware/assignbulktags");
+app.use("/assignbulktags", assignbulktags);
+
+
+//! sendBulkEmails Routes
+const sendBulkEmails = require("./middleware/sendBulkEmails");
+app.use("/", sendBulkEmails);
+
 
 //Cors Polycy 
 app.use((req, res, next) => {

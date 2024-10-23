@@ -41,18 +41,8 @@ const getJob = async (req, res) => {
 //POST a new JobTemplate 
 const createJob = async (req, res) => {
     const { accounts, pipeline, stageid, templatename, jobname, addShortCode, jobassignees, priority, description, absolutedates, startsin, startsinduration, duein, dueinduration, startdate, enddate, comments, active } = req.body;
-
     try {
-        // Check if a task template with similar properties already exists
-
-        // const existingJob = await Job.findOne({
-        //     jobname
-        // });
-
-        // if (existingJob) {
-        //     return res.status(400).json({ error: "Job already exists" });
-        // }
-
+      
         // Find the pipeline associated with the job
         const jobPipeline = await Pipeline.findById(pipeline);
 
@@ -62,12 +52,10 @@ const createJob = async (req, res) => {
         // Use the provided stageid or defaultStageId if not provided
         const selectedStageId = stageid || defaultStageId;
 
-
         for (const accountid of accounts) {
             const newJob = await Job.create({
                 accounts: accountid, pipeline, stageid: selectedStageId, templatename, jobname, addShortCode, jobassignees, priority, description, absolutedates, startsin, startsinduration, duein, dueinduration, startdate, enddate, comments, active
             });
-
         }
         return res.status(201).json({ message: "Job created successfully" });
     } catch (error) {

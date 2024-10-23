@@ -29,12 +29,23 @@ teamMember: [{
     // },
     contacts: [
         {
-            type: Array,
-        type: mongoose.Schema.Types.ObjectId, ref: 'Contacts',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Contacts',
             // required    : [true, 'Contacts are required'],
         }
     ],
+    description: {
+        type: String
+    },
+    active: {
+        type: Boolean,
+        default: true,
+    },
     
+    companyAddress: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'companyAddress', // Ensure this matches your CompanyAddresses model
+    },
 }, { timestamps: true });
 
 // Collection

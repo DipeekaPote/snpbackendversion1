@@ -23,7 +23,6 @@ const lineItemsSchema = new mongoose.Schema({
     }
 });
 
-
 // Define the lineItems Schema 
 const summarySchema = new mongoose.Schema({
     subtotal: {
@@ -38,10 +37,7 @@ const summarySchema = new mongoose.Schema({
     total: {
         type: Number,
     },
-  
 });
-
-
 
 const invoiceTemplateSchema = new mongoose.Schema({
     templatename: {

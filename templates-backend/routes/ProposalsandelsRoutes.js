@@ -8,6 +8,6 @@ router.get('/proposalesandels/:id', getProposalesAndElsTemplate)
 router.post('/proposalesandels', createProposalesAndElsTemplate)
 router.delete('/proposalesandels/:id', deleteProposalesAndElsTemplate)
 router.patch('/proposalesandels/:id', updateProposalesAndElsTemplate)
-router.get('/proposalesandels/proposalesandelslist/:id', getProposalesAndElsTemplateById)
+router.get('/proposalesandelslist/:id', getProposalesAndElsTemplateById)
 
 module.exports = router;
