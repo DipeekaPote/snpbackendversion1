@@ -52,7 +52,7 @@ const getAccounts = async (req, res) => {
             .populate({ path: 'tags', model: 'Tags' })
             .populate({ path: 'teamMember', model: 'User' })
             .populate({ path: 'contacts', model: 'Contacts' })
-            .populate({ path: 'companyAddress', model: 'CompanyAddresses' }); 
+            .populate({ path: 'companyAddress', model: 'companyAddress' }); 
         //sort({ createdAt: -1 });
         res.status(200).json({ message: "Accounts retrieved successfully", accounts })
 
@@ -126,20 +126,48 @@ const deleteAccount = async (req, res) => {
     }
 };
 
-//update a new Account 
+// //update a new Account 
+// const updateAccount = async (req, res) => {
+//     const { id } = req.params;
+//     // console.log(id)
+//     // console.log(req.body)
+
+//     if (!mongoose.Types.ObjectId.isValid(id)) {
+//         return res.status(404).json({ error: "Invalid Account ID" });
+//     }
+
+//     try {
+//         const updatedAccount = await Accounts.findOneAndUpdate(
+//             { _id: id },
+//             { ...req.body },
+//             { new: true }
+//         );
+
+//         if (!updatedAccount) {
+//             return res.status(404).json({ error: "No such Account" });
+//         }
+
+//         res.status(200).json({ message: "Account Updated successfully", updatedAccount });
+//     } catch (error) {
+//         return res.status(500).json({ error: error.message });
+//     }
+// };
+
 const updateAccount = async (req, res) => {
     const { id } = req.params;
-    // console.log(id)
-    // console.log(req.body)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: "Invalid Account ID" });
     }
 
     try {
+        // Extract data from the request body
+        const { clientType, accountName, tags, teamMember, companyName, country, streetAddress, city, state, postalCode, contacts } = req.body;
+
+        // Find and update the account information
         const updatedAccount = await Accounts.findOneAndUpdate(
             { _id: id },
-            { ...req.body },
+            { clientType, accountName, tags, teamMember, contacts },
             { new: true }
         );
 
@@ -147,11 +175,41 @@ const updateAccount = async (req, res) => {
             return res.status(404).json({ error: "No such Account" });
         }
 
+        // If the client type is "Company", update the associated company address
+        if (clientType === 'Company') {
+            if (!updatedAccount.companyAddress) {
+                return res.status(404).json({ error: "Company Address not found for this account" });
+            }
+
+            const updatedCompanyAddress = await companyAddress.findOneAndUpdate(
+                { _id: updatedAccount.companyAddress },
+                {
+                    companyName,
+                    country,
+                    streetAddress,
+                    city,
+                    state,
+                    postalCode,
+                },
+                { new: true }
+            );
+
+            if (!updatedCompanyAddress) {
+                return res.status(404).json({ error: "Failed to update company address" });
+            }
+
+            // Update the company address reference in the account, if needed (if not already existing)
+            updatedAccount.companyAddress = updatedCompanyAddress._id;
+            await updatedAccount.save();
+        }
+
         res.status(200).json({ message: "Account Updated successfully", updatedAccount });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
+
+
 
 //get all accounts List
 const getAccountsList = async (req, res) => {

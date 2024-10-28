@@ -1,5 +1,8 @@
 const Invoice = require('../models/invoiceModel');
 const mongoose = require("mongoose");
+const Accounts = require('../models/AccountModel'); // Ensure the path is correct
+const User = require('../models/userModel'); // Import User if not already imported
+const InvoiceTemplate = require('../models/invoiceTemplateModel'); // Import if used
 
 //get all Invoice
 const getInvoices = async (req, res) => {
@@ -146,12 +149,31 @@ const getInvoiceList = async (req, res) => {
 //Get a single InvoiceList List
 const getInvoiceListbyid = async (req, res) => {
     const { id } = req.params;
-   
+  
     try {
-        const invoice = await Invoice.findById(id)
-            .populate({ path: 'account', model: 'account' })
-            .populate({ path: 'invoicetemplate', model: 'InvoiceTemplate' })
-            .populate({ path: 'teammember', model: 'User' });
+      const invoice = await Invoice.findById(id)
+        .populate({ path: 'account', model: 'Accounts' }) // Ensure model name matches exactly
+        .populate({ path: 'invoicetemplate', model: 'InvoiceTemplate' })
+        .populate({ path: 'teammember', model: 'User' });
+  
+      res.status(200).json({ message: "Invoice retrieved successfully", invoice });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+
+// Get a single InvoiceList by Account ID
+const getInvoiceListbyAccountid = async (req, res) => {
+    const { id } = req.params; // Correct destructuring
+    // console.log(id); // Log the account ID for debugging
+
+    try {
+        const invoice = await Invoice.find({ account: id }); // Corrected syntax here
+
+        if (!invoice || invoice.length === 0) {
+            return res.status(404).json({ message: "No invoices found for this account." });
+        }
 
         res.status(200).json({ message: "Invoice retrieved successfully", invoice });
 
@@ -159,7 +181,6 @@ const getInvoiceListbyid = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 module.exports = {
     createInvoice,
@@ -169,4 +190,5 @@ module.exports = {
     updateInvoice,
     getInvoiceList,
     getInvoiceListbyid,
+    getInvoiceListbyAccountid,
 }
