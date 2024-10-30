@@ -79,6 +79,7 @@ const getOrganizerAccountWise = async (req, res) => {
 
 const createOrganizerAccountWise = async (req, res) => {
     try {
+        // console.log(req.body)
         const newOrganizerAccountWise = new OrganizerAccountWise(req.body);
         await newOrganizerAccountWise.save();
         return res.status(201).json({ message: "OrganizerAccountWise created successfully", newOrganizerAccountWise });
