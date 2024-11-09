@@ -31,37 +31,6 @@ const getTeamMember = async (req, res) => {
 };
 
 // POST create a new TeamMember
-// const createTeamMember = async (req, res) => {
-//   const { firstName, middleName, lastName, phoneNumber, role, email, managePayments, manageInvoices, managePipelines,
-//        manageJobRecurrence, manageTimeEntries, manageRatesinTimeEntries, manageAccounts, viewallAccounts, 
-//        manageTags, manageCustomFields, manageOrganizers, assignTeamMates, chargeFirmBalance, viewAllContacts, 
-//        manageContacts, manageProposals, manageSites, manageEmails, manageServices, editOrganizersAnswers, 
-//        managePublicFilterTemplates, manageDocuments, manageTemplates, manageIRSTranscripts, manageMarketPlace, 
-//        viewReporting, userid, active } = req.body;
-
-//   try {
-//     //check the email already exists
-//     const existingAdmin = await TeamMember.findOne({ email });
-//     if (existingAdmin) {
-//       return res.status(400).json({ message: "Team Member with this Email already exists" });
-//     }
-
-//     const teamMember = await TeamMember.create({
-//       firstName, middleName, lastName, phoneNumber, role, email, managePayments, manageInvoices, managePipelines,
-//        manageJobRecurrence, manageTimeEntries, manageRatesinTimeEntries, manageAccounts, viewallAccounts, 
-//        manageTags, manageCustomFields, manageOrganizers, assignTeamMates, chargeFirmBalance, viewAllContacts, 
-//        manageContacts, manageProposals, manageSites, manageEmails, manageServices, editOrganizersAnswers, 
-//        managePublicFilterTemplates, manageDocuments, manageTemplates, manageIRSTranscripts, manageMarketPlace, 
-//        viewReporting,userid, active 
-//     });
-//     res.status(200).json({ message: "Team Member created successfully", teamMember });
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
-
-// POST create a new TeamMember
 const createTeamMember = async (req, res) => {
   const {
     firstName, middleName, lastName, phoneNumber, role, email, managePayments, manageInvoices, managePipelines,
@@ -199,8 +168,6 @@ const getTeamMemberList = async (req, res) => {
 
       };
     });
-
-
     //sort({ createdAt: -1 });
     res.status(200).json({ message: "TeamMembers retrieved successfully", teamMemberslist })
   } catch (error) {

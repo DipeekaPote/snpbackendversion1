@@ -89,6 +89,52 @@ const createOrganizerAccountWise = async (req, res) => {
     }
 };
 
+//POST a new JobTemplate 
+// const createOrganizerAccounts = async (req, res) => {
+//     const { accountids, organizertemplateid, reminders, noofreminders, daysuntilnextreminder, jobid, sections, active, issealed } = req.body;
+//     try {
+      
+//         for (const accountid of accountids) {
+//             const newOrganizer = await OrganizerAccountWise.create({
+//                 accountid: accountid, organizertemplateid, reminders, noofreminders, daysuntilnextreminder, jobid, sections, active, issealed
+//             });
+//         }
+//         return res.status(201).json({ message: "OrganizerAccountWise created successfully" });
+//     } catch (error) {
+//         console.error("Error creating OrganizerAccountWise:", error);
+//         return res.status(500).json({ error: "Error creating OrganizerAccountWise" });
+//     }
+// };
+
+const createOrganizerAccounts = async (req, res) => {
+    const { accountids, organizertemplateid, reminders, noofreminders, daysuntilnextreminder, jobid, sections, active, issealed } = req.body;
+
+    // Check if accountids is an array
+    if (!Array.isArray(accountids)) {
+        return res.status(400).json({ error: "accountids must be an array" });
+    }
+
+    try {
+        for (const accountid of accountids) {
+            await OrganizerAccountWise.create({
+                accountid,
+                organizertemplateid,
+                reminders,
+                noofreminders,
+                daysuntilnextreminder,
+                jobid,
+                sections,
+                active,
+                issealed
+            });
+        }
+        return res.status(201).json({ message: "OrganizerAccountWise created successfully" });
+    } catch (error) {
+        console.error("Error creating OrganizerAccountWise:", error);
+        return res.status(500).json({ error: "Error creating OrganizerAccountWise" });
+    }
+};
+
 
 //delete a OrganizerAccountWise
 
@@ -162,4 +208,5 @@ module.exports = {
     deleteOrganizerAccountWise,
     getOrganizerByAccountId,
     updateOrganizerAccountWise,
+    createOrganizerAccounts,
 }

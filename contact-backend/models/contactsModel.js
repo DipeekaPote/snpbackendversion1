@@ -91,13 +91,7 @@ const contactSchema = new mongoose.Schema({
         }
     ],
 
-    accountid: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Accounts',
-        // required: true
-    },
-    
-    description: {
+      description: {
         type: String
     },
     

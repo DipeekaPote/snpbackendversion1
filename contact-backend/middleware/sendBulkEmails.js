@@ -66,20 +66,20 @@ router.post("/sendBulkEmails", async (req, res) => {
 
         for (const accountId of selectedAccounts) {
             const account = await Account.findById(accountId);
-            const contacts = account.contacts;
-
+            const contacts = account.contacts            ;
+            // console.log(contacts)
             totalEmails = selectedAccounts.length;
 
             for (const contactId of contacts) {
                 const contact = await Contact.findById(contactId);
-
+// console.log(contact)
                 if (!contact) {
                     console.log(`Contact not found: ${contactId}`);
                     missingContacts.push(account.accountName); // Store missing contact ID
                     continue; // Skip to the next contact if not found
                 }
-
-                if (contact.emailSync === "true") {
+// console.log(contact.emailSync)
+                if (contact.emailSync === true) {
                     // Function to replace placeholders with actual data
                     const replacePlaceholders = (template, data) => {
                         return template.replace(/\[([\w\s]+)\]/g, (match, placeholder) => {
@@ -214,21 +214,34 @@ router.post("/sendBulkEmails", async (req, res) => {
                         </html>`;
 
                     // Create transporter with Outlook service and authentication
+                    // const transporter = nodemailer.createTransport({
+                    //     service: "gmail",
+                    //     auth: {
+                    //         user: "rohitkumbhar7009@gmail.com",
+                    //         pass: "vwjz zrbe rwbe dhnj",
+                    //     },
+                    // });
                     const transporter = nodemailer.createTransport({
-                        service: "gmail",
+                        host: "smtp.gmail.com",
+                        port: 587,
+                        secure: false, // Use TLS
                         auth: {
-                            user: "rohitkumbhar7009@gmail.com",
-                            pass: "vwjz zrbe rwbe dhnj",
+                            user: "dipeeka.pote52@gmail.com",
+                            pass: "togt ljzg urar dlam",
+                        },
+                        tls: {
+                            rejectUnauthorized: false, // Allow self-signed certificates if any
                         },
                     });
+                    
 
                     const mailOptions = {
-                        from: "rohitkumbhar7009@gmail.com",
+                        from: "dipeeka.pote52@gmail.com",
                         to: contact.email,
                         subject: mailSubject,
                         html: htmlPage,
                     };
-
+                    // console.log(mailOptions)
                     const sendMail = async () => {
                         try {
                             const info = await transporter.sendMail(mailOptions);
@@ -237,7 +250,7 @@ router.post("/sendBulkEmails", async (req, res) => {
                             if (emailsSent === totalEmails) {
                                 // Send notification email after all bulk emails are sent
                                 const notificationMailOptions = {
-                                    from: "rohitkumbhar7009@gmail.com",
+                                    from: "dipeeka.pote52@gmail.com",
                                     to: notificationemail,
                                     subject: "Bulk Email Sending Complete",
                                     text: "All bulk emails have been sent successfully.",
@@ -276,16 +289,16 @@ router.post("/sendBulkEmails", async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "rohitkumbhar7009@gmail.com",
-                pass: "vwjz zrbe rwbe dhnj",
+                user: "dipeeka.pote52@gmail.com",
+                pass: "togt ljzg urar dlam",
             },
         });
-        console.log(missingContacts.length)
+        // console.log(missingContacts.length)
         // Check if there are missing contacts
         if (missingContacts.length > 0) {
             // Send notification email after all bulk emails are sent
             const notificationMailOptions = {
-                from: "rohitkumbhar7009@gmail.com",
+                from: "dipeeka.pote52@gmail.com",
                 to: notificationemail,
                 subject: "Bulk Email Sending Complete with Exception.",
                 text: `All bulk emails have been sent successfully.`,
@@ -295,6 +308,8 @@ router.post("/sendBulkEmails", async (req, res) => {
             await transporter.sendMail(notificationMailOptions);
      
         }
+        // console.log("Email sent to admin:");
+
         res.status(200).json({ status: 200, message: "Bulk emails sent successfully." });
     } catch (error) {
         console.error("Error sending bulk emails:", error);

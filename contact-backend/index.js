@@ -19,6 +19,7 @@ app.use('/accounts', AccountsRoutes)
 app.use('/', AssignTags)
 
 //! assignbulktags Routes
+
 const assignbulktags = require("./middleware/assignbulktags");
 app.use("/assignbulktags", assignbulktags);
 
@@ -26,6 +27,11 @@ app.use("/assignbulktags", assignbulktags);
 //! sendBulkEmails Routes
 const sendBulkEmails = require("./middleware/sendBulkEmails");
 app.use("/", sendBulkEmails);
+
+
+//! assignteammember Routes
+const manageTeamMember = require("./middleware/manageTeamMember");
+app.use("/manageteammember", manageTeamMember);
 
 
 //Cors Polycy 
