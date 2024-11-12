@@ -9,7 +9,6 @@ const getProposalesAndElsAccountswise = async (req, res) => {
     try {
         const proposalesandelsAccountwise = await ProposalesandelsAccountwise.find({}).sort({ createdAt: -1 });
         res.status(200).json({ message: "ProposalesAndEls Accountwise retrieved successfully", proposalesandelsAccountwise });
-
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -19,11 +18,9 @@ const getProposalesAndElsAccountswise = async (req, res) => {
 //Get a single ServiceTemplate
 const getProposalesAndElsAccountwise = async (req, res) => {
     const { id } = req.params;
-
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: "Invalid ProposalesAndEls Accountwise ID" });
     }
-
     try {
         const proposalesandelsAccountwise = await ProposalesandelsAccountwise.findById(id);
         if (!proposalesandelsAccountwise) {
@@ -54,6 +51,25 @@ const getProposalandElsListbyAccountid = async (req, res) => {
     }
 };
 
+// Get a single InvoiceList by Account ID
+const getProposalandElsList = async (req, res) => {
+
+    try {
+        const proposalesandelsAccountwise = await ProposalesandelsAccountwise.find()
+        .populate({ path: 'accountid', model: 'Accounts' }) // Ensure model name matches exactly
+        .populate({ path: 'proposaltemplateid', model: 'ProposalesAndEls' })
+        .populate({ path: 'teammember', model: 'User' }); // Ensure model name matches exactly; // Corrected syntax here
+
+        if (!proposalesandelsAccountwise || proposalesandelsAccountwise.length === 0) {
+            return res.status(404).json({ message: "No Proposalesandels found for this account." });
+        }
+        res.status(200).json({ message: "Proposalesandels Accountwise retrieved successfully", proposalesandelsAccountwise });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 //Get a single InvoiceList List
 const getProposalandElsListbyid = async (req, res) => {
     const { id } = req.params;
@@ -61,7 +77,7 @@ const getProposalandElsListbyid = async (req, res) => {
     try {
       const proposalesandelsAccountwise = await ProposalesandelsAccountwise.findById(id)
         .populate({ path: 'accountid', model: 'Accounts' }) // Ensure model name matches exactly
-        .populate({ path: 'proposaltemplateid', model: 'ProposalesAndEls' })
+        .populate({ path: 'proposaltemplateid', model: 'ProposalesAndEls', select: 'templatename _id', })
         .populate({ path: 'teammember', model: 'User' });
   
       res.status(200).json({ message: "Proposalesandels Accountwise retrieved successfully", proposalesandelsAccountwise });
@@ -94,18 +110,15 @@ const updateProposalesandelsAccountwise = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: "Invalid Proposalesandels Accountwise ID" });
     }
-
     try {
         const updatedProposalesandelsAccountwise = await ProposalesandelsAccountwise.findOneAndUpdate(
             { _id: id },
             { ...req.body },
             { new: true }
         );
-
         if (!updatedProposalesandelsAccountwise) {
             return res.status(404).json({ error: "No such Proposalesandels Accountwise" });
         }
-
         res.status(200).json({ message: "Proposalesandels Accountwise Updated successfully", updatedProposalesandelsAccountwise });
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -152,7 +165,6 @@ const createProposalsAndElsAccounts = async (req, res) => {
     if (!Array.isArray(accountids)) {
         return res.status(400).json({ error: "accountids must be an array" });
     }
-
     try {
         for (const accountid of accountids) {
             await ProposalesandelsAccountwise.create({
@@ -205,5 +217,6 @@ module.exports = {
     deleteProposalesAndElsAccountwise,
     updateProposalesandelsAccountwise,
     getProposalandElsListbyid,
-    getProposalandElsListbyAccountid
+    getProposalandElsListbyAccountid,
+    getProposalandElsList
 }

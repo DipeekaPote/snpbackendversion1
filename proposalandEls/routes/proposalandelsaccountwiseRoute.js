@@ -7,7 +7,8 @@ const { createProposalsAndElsAccounts,
     deleteProposalesAndElsAccountwise,
     updateProposalesandelsAccountwise,
     getProposalandElsListbyid,
-    getProposalandElsListbyAccountid } = require('../controller/proposalAccountwiseController')
+    getProposalandElsListbyAccountid,
+    getProposalandElsList } = require('../controller/proposalAccountwiseController')
 
 //******organizer Accountwise Start******** */
 
@@ -17,8 +18,8 @@ router.post('/proposalaccountwise', createProposalsAndElsAccounts)
 router.delete('/proposalaccountwise/:id', deleteProposalesAndElsAccountwise)
 router.get('/proposalaccountwise/proposalbyaccount/:id', getProposalandElsListbyAccountid)
 router.patch('/proposalaccountwise/:id', updateProposalesandelsAccountwise)
-router.post('/proposalaccountwise/proposallist/:id', getProposalandElsListbyid)
-
+router.get('/proposalaccountwise/proposallist/:id', getProposalandElsListbyid)
+router.get('/proposalaccountwise/allproposallist/list', getProposalandElsList)
 
 //******organizer Accountwise ENd******** */
 
