@@ -66,19 +66,19 @@ router.post("/sendBulkEmails", async (req, res) => {
 
         for (const accountId of selectedAccounts) {
             const account = await Account.findById(accountId);
-            const contacts = account.contacts            ;
+            const contacts = account.contacts;
             // console.log(contacts)
             totalEmails = selectedAccounts.length;
 
             for (const contactId of contacts) {
                 const contact = await Contact.findById(contactId);
-// console.log(contact)
+                // console.log(contact)
                 if (!contact) {
                     console.log(`Contact not found: ${contactId}`);
                     missingContacts.push(account.accountName); // Store missing contact ID
                     continue; // Skip to the next contact if not found
                 }
-// console.log(contact.emailSync)
+                // console.log(contact.emailSync)
                 if (contact.emailSync === true) {
                     // Function to replace placeholders with actual data
                     const replacePlaceholders = (template, data) => {
@@ -213,14 +213,6 @@ router.post("/sendBulkEmails", async (req, res) => {
                         </body>
                         </html>`;
 
-                    // Create transporter with Outlook service and authentication
-                    // const transporter = nodemailer.createTransport({
-                    //     service: "gmail",
-                    //     auth: {
-                    //         user: "rohitkumbhar7009@gmail.com",
-                    //         pass: "vwjz zrbe rwbe dhnj",
-                    //     },
-                    // });
                     const transporter = nodemailer.createTransport({
                         host: "smtp.gmail.com",
                         port: 587,
@@ -233,7 +225,7 @@ router.post("/sendBulkEmails", async (req, res) => {
                             rejectUnauthorized: false, // Allow self-signed certificates if any
                         },
                     });
-                    
+
 
                     const mailOptions = {
                         from: "dipeeka.pote52@gmail.com",
@@ -306,7 +298,7 @@ router.post("/sendBulkEmails", async (req, res) => {
             };
 
             await transporter.sendMail(notificationMailOptions);
-     
+
         }
         // console.log("Email sent to admin:");
 

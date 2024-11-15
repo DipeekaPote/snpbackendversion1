@@ -1,8 +1,9 @@
 const ProposalesandelsAccountwise = require('../models/proposalAccountwiseModel');
 const mongoose = require("mongoose");
-const Accounts = require('../models/AccountModel'); // Ensure the path is correct
+const Accounts = require('../models/accountDetailsModel'); // Ensure the path is correct
 const User = require('../models/userModel'); // Import User if not already imported
 const ProposalanselsTemplate = require('../models/proposalsandelsModel'); // Import if used
+const InvoiceTemplate = require('../models/invoiceTemplateModel'); // Import if used
 
 //get all ProposalesAndElsTemplate
 const getProposalesAndElsAccountswise = async (req, res) => {
@@ -41,6 +42,7 @@ const getProposalandElsListbyAccountid = async (req, res) => {
         .populate({ path: 'accountid', model: 'Accounts' }) // Ensure model name matches exactly
         .populate({ path: 'proposaltemplateid', model: 'ProposalesAndEls' })
         .populate({ path: 'teammember', model: 'User' }); // Ensure model name matches exactly; // Corrected syntax here
+    
 
         if (!proposalesandelsAccountwise || proposalesandelsAccountwise.length === 0) {
             return res.status(404).json({ message: "No Proposalesandels found for this account." });
@@ -58,7 +60,8 @@ const getProposalandElsList = async (req, res) => {
         const proposalesandelsAccountwise = await ProposalesandelsAccountwise.find()
         .populate({ path: 'accountid', model: 'Accounts' }) // Ensure model name matches exactly
         .populate({ path: 'proposaltemplateid', model: 'ProposalesAndEls' })
-        .populate({ path: 'teammember', model: 'User' }); // Ensure model name matches exactly; // Corrected syntax here
+        .populate({ path: 'teammember', model: 'User' }) // Ensure model name matches exactly; // Corrected syntax here
+      
 
         if (!proposalesandelsAccountwise || proposalesandelsAccountwise.length === 0) {
             return res.status(404).json({ message: "No Proposalesandels found for this account." });
@@ -78,8 +81,10 @@ const getProposalandElsListbyid = async (req, res) => {
       const proposalesandelsAccountwise = await ProposalesandelsAccountwise.findById(id)
         .populate({ path: 'accountid', model: 'Accounts' }) // Ensure model name matches exactly
         .populate({ path: 'proposaltemplateid', model: 'ProposalesAndEls', select: 'templatename _id', })
-        .populate({ path: 'teammember', model: 'User' });
-  
+        .populate({ path: 'teammember', model: 'User' })
+        .populate({ path: 'invoiceteammember', model: 'User', select: 'username _id', })
+        .populate({ path: 'servicesandinvoicetempid', model: 'InvoiceTemplate', select: 'templatename _id', });
+
       res.status(200).json({ message: "Proposalesandels Accountwise retrieved successfully", proposalesandelsAccountwise });
     } catch (error) {
       res.status(500).json({ error: error.message });

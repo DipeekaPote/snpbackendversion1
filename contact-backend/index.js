@@ -33,6 +33,10 @@ app.use("/", sendBulkEmails);
 const manageTeamMember = require("./middleware/manageTeamMember");
 app.use("/manageteammember", manageTeamMember);
 
+//! Edit EmailSync Routes
+const editloginnotifyemailsync = require("./middleware/editloginnotifyemailsync");
+app.use("/", editloginnotifyemailsync);
+
 
 //Cors Polycy 
 app.use((req, res, next) => {

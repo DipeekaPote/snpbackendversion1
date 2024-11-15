@@ -2,6 +2,50 @@
 
 const mongoose = require('mongoose');
 
+// Define a schema for condition
+const SectionSettingConditionSchema = new mongoose.Schema({
+    question: {
+      type: String,
+      // required: true,
+    },
+    answer: {
+      type: String,
+      // required: true,
+    }
+  });
+
+  
+const QuestionSectionSchema = new mongoose.Schema({
+
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    prefilled: {
+      type: Boolean,
+      default: false
+    },
+    conditional: {
+      type: Boolean,
+      default: false
+    },
+    mode: {
+      type: String,
+      // enum: ['All', 'Any'], // Options for mode
+      // default: 'All'
+    },
+    conditions: [SectionSettingConditionSchema],
+  
+    descriptionEnabled: {
+      type: Boolean,
+      default: false
+    },
+    description: {
+      type: String,
+      maxlength: 20480,
+      default: ''
+    },
+      });
 
 // Define the form element schema
 const organizerSectionSchemaformElementSchema = new mongoose.Schema({
@@ -16,17 +60,38 @@ const organizerSectionSchemaformElementSchema = new mongoose.Schema({
         }
     ],
     text: { type: String },
-    textvalue: { type: String }
+    textvalue: { type: String },
+    
+  questionsectionsettings: QuestionSectionSchema,
 
 });
 
 
+// Define the main form schema
+const SectionSettingSchema = new mongoose.Schema({
+    sectionRepeatingMode: {
+      type: Boolean,
+      default: false
+    },
+    buttonName: {
+      type: String,
+      // required: true,
+      // maxlength: 25
+    },
+    conditional: {
+      type: Boolean,
+      default: false
+    },
+    conditions: [SectionSettingConditionSchema]  // Array of conditions, each with a question and answer
+  });
 
 const organizerSectionSchema = new mongoose.Schema({
     id: { type: String },
     name: { type: String },
     text: { type: String },
     formElements: [organizerSectionSchemaformElementSchema],
+    textBlock : {type:String},
+    sectionsettings: SectionSettingSchema
 });
 
 
